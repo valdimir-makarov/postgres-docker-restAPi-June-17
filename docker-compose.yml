@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=bubun-postgres-june-1
+      - POSTGRES_PASSWORD=123456789d
+    ports:
+      - '5433:5432'  # Changed the host port to 5433 to avoid conflicts
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_USER=bubun-postgres-june-1
+      - POSTGRES_PASSWORD=123456789d
+      - POSTGRES_DB=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+    depends_on:
+      - db
+
+volumes:
+  db:
+    driver: local
